@@ -4,7 +4,7 @@ A statically generated documentation site for programming course materials. The 
 
 The site is built with Next.js, Nextra, and MDX, then deployed to GitHub Pages.
 
-- Live site: [Tatpong.github.io](https://Tatpong.github.io)
+- Live site: [tatpong-network.github.io](tatpong-network.github.io)
 - Developer documentation: [DEVELOPER.md](./DEVELOPER.md)
 
 ## Quick start

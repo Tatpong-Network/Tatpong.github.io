@@ -1,0 +1,17 @@
+export default {
+  index: "Welcome",
+  frontend: "Frontend Development",
+  labs: "Labs",
+  git: "Git",
+  csharp: "C#",
+  oop: "Object-Oriented Programming",
+  dart: "Dart",
+  flutter: "Flutter",
+  "native-mobile": "Native Mobile",
+  typescript: "TypeScript",
+  nextjs: "Next.js Project-based (14 สัปดาห์)",
+  react: "React",
+  react_native: "React Native + Expo (14 สัปดาห์)",
+  unity2d: "Unity 2D",
+  "it-security": "IT Security & Laws",
+};

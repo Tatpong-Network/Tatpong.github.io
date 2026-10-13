@@ -1,0 +1,63 @@
+---
+title: "การเขียนโปรแกรมเชิงวัตถุด้วย C# และ .NET"
+sidebarTitle: "OOP"
+asIndexPage: true
+---
+
+import { Callout, Cards } from "nextra/components";
+
+# การเขียนโปรแกรมเชิงวัตถุด้วย C# และ .NET
+
+Object-Oriented Programming (OOP) คือแนวคิดในการออกแบบโปรแกรมให้ประกอบด้วย **Object** ที่มีทั้งข้อมูลและพฤติกรรมของตนเอง เช่น `BankAccount` มีเลขบัญชีและยอดเงิน พร้อมเมธอดฝากและถอนเงิน การแบ่งความรับผิดชอบเช่นนี้ช่วยให้โปรแกรมอ่านง่าย ทดสอบง่าย และขยายต่อได้โดยกระทบส่วนอื่นน้อยลง
+
+เนื้อหาในบทเรียนใช้ภาษา **C#** และเครื่องมือ **.NET CLI** ทุกตัวอย่างสามารถสร้างและรันจาก Terminal ได้ด้วยคำสั่ง `dotnet` โดยไม่ผูกกับโปรแกรมแก้ไขโค้ดชนิดใดชนิดหนึ่ง
+
+<Callout type="info">
+  ควรเรียนบทตัวแปร ตัวดำเนินการ การแปลงชนิดข้อมูล อาร์เรย์ และลูปก่อน แล้วจึงเริ่มบท Class และ Object
+</Callout>
+
+## ผลลัพธ์การเรียนรู้
+
+เมื่อจบบทเรียน นักศึกษาจะสามารถ
+
+- อธิบายความแตกต่างระหว่าง Class และ Object และสร้าง Object ด้วย Constructor ได้
+- ออกแบบ Property และ Method เพื่อทำ Encapsulation และรักษาความถูกต้องของข้อมูล
+- ใช้ Inheritance, Method Overriding และ Polymorphism ได้เหมาะสม
+- กำหนดข้อตกลงของระบบด้วย Interface และซ่อนรายละเอียดด้วย Abstraction
+- เลือกใช้ Composition เพื่อประกอบ Object หลายชนิดให้ทำงานร่วมกัน
+- สร้างโปรเจกต์ C# แบบหลายไฟล์และรันด้วย `dotnet build` และ `dotnet run`
+
+## เส้นทางการเรียน
+
+### พื้นฐานภาษา C#
+
+<Cards>
+  <Cards.Card title="ตัวแปร" href="/oop/variables" />
+  <Cards.Card title="ตัวดำเนินการ" href="/oop/operators" />
+  <Cards.Card title="การแปลงชนิดข้อมูล" href="/oop/type-conversion" />
+  <Cards.Card title="อาร์เรย์" href="/oop/arrays" />
+  <Cards.Card title="การทำซ้ำ" href="/oop/loops" />
+</Cards>
+
+### OOP ด้วย C# และ .NET
+
+<Cards>
+  <Cards.Card title="เริ่มต้นโปรเจกต์ .NET" href="/oop/dotnet-setup" />
+  <Cards.Card title="Class และ Object" href="/oop/classes-objects" />
+  <Cards.Card title="Encapsulation" href="/oop/encapsulation" />
+  <Cards.Card title="Inheritance และ Polymorphism" href="/oop/inheritance-polymorphism" />
+  <Cards.Card title="Abstraction และ Interface" href="/oop/abstraction-interfaces" />
+  <Cards.Card title="Composition" href="/oop/composition" />
+  <Cards.Card title="มินิโปรเจกต์ระบบห้องสมุด" href="/oop/mini-project" />
+</Cards>
+
+## แนวคิดหลัก 4 ประการของ OOP
+
+| แนวคิด | คำถามที่ช่วยจำ | เครื่องมือใน C# |
+| --- | --- | --- |
+| Encapsulation | Object ปกป้องข้อมูลของตนเองอย่างไร | `private`, Property, Method |
+| Inheritance | Class ใหม่เป็นชนิดย่อยของ Class เดิมหรือไม่ | `: BaseClass`, `protected` |
+| Polymorphism | สั่งงานแบบเดียวกันแต่แต่ละ Object ตอบสนองต่างกันได้อย่างไร | `virtual`, `override`, Interface |
+| Abstraction | ผู้ใช้จำเป็นต้องรู้รายละเอียดส่วนใดบ้าง | `abstract`, `interface` |
+
+OOP ไม่ได้หมายถึงการสร้าง Class ให้มากที่สุด เป้าหมายคือการให้แต่ละ Class มีหน้าที่ชัดเจน ข้อมูลอยู่กับพฤติกรรมที่เกี่ยวข้อง และ Object ติดต่อกันผ่านข้อตกลงที่เข้าใจง่าย

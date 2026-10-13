@@ -1,0 +1,332 @@
+---
+title: Workshop — แอปรายการสิ่งที่ต้องทำ (Todo App)
+sidebarTitle: Workshop
+---
+
+# แบบฝึกเสริม — แอปรายการสิ่งที่ต้องทำ (Todo App)
+
+## ภาพรวมของ Workshop
+
+แบบฝึกนี้ใช้เวลา 30–45 นาทีในช่วงสัปดาห์ 5–7 เพื่อทบทวน Components, State, Custom Hook และ AsyncStorage ก่อนนำแนวคิดกลับไปใช้กับ Campus Events Mobile จึงเป็นแบบฝึกสั้น ไม่ใช่แอปหลักประจำสัปดาห์
+
+## สิ่งที่จะสร้าง
+
+- เพิ่มรายการสิ่งที่ต้องทำ
+- ทำเครื่องหมายว่าเสร็จแล้ว (Toggle)
+- ลบรายการ
+- บันทึกข้อมูลลงเครื่องด้วย AsyncStorage
+
+## โครงสร้างโปรเจกต์
+
+```
+TodoApp/
+├── app/
+│   ├── _layout.tsx        # Root Layout
+│   └── index.tsx          # หน้าหลัก Todo
+├── components/
+│   ├── TodoItem.tsx        # Component แสดงรายการเดียว
+│   └── AddTodoInput.tsx    # Component กรอกรายการใหม่
+└── hooks/
+    └── useTodos.ts         # Custom Hook จัดการ Todo State + Storage
+```
+
+## ขั้นตอนที่ 1 — สร้าง Custom Hook
+
+สร้างไฟล์ `hooks/useTodos.ts` สำหรับจัดการ State ของ Todo ทั้งหมด รวมถึงการบันทึกและโหลดจาก AsyncStorage
+
+```ts
+// hooks/useTodos.ts
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: string;
+}
+
+interface UseTodosReturn {
+  todos: Todo[];
+  loading: boolean;
+  addTodo: (text: string) => void;
+  toggleTodo: (id: string) => void;
+  deleteTodo: (id: string) => void;
+}
+
+const TODOS_KEY = '@todos_list';
+
+export function useTodos(): UseTodosReturn {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // โหลดข้อมูลจาก Storage เมื่อเปิดแอป
+  useEffect(() => {
+    loadTodos();
+  }, []);
+
+  // บันทึกข้อมูลทุกครั้งที่ todos เปลี่ยน
+  useEffect(() => {
+    if (!loading) {
+      saveTodos(todos);
+    }
+  }, [todos, loading]);
+
+  const loadTodos = async (): Promise<void> => {
+    try {
+      const json = await AsyncStorage.getItem(TODOS_KEY);
+      if (json) setTodos(JSON.parse(json) as Todo[]);
+    } catch (err) {
+      console.error('โหลด todos ไม่สำเร็จ');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveTodos = async (data: Todo[]): Promise<void> => {
+    try {
+      await AsyncStorage.setItem(TODOS_KEY, JSON.stringify(data));
+    } catch (err) {
+      console.error('บันทึก todos ไม่สำเร็จ');
+    }
+  };
+
+  // เพิ่มรายการใหม่
+  const addTodo = (text: string): void => {
+    if (!text.trim()) return;
+    const newTodo: Todo = {
+      id: Date.now().toString(), // ใช้ timestamp เป็น ID ที่ไม่ซ้ำ
+      text: text.trim(),
+      completed: false,
+      createdAt: new Date().toISOString(),
+    };
+    setTodos((prev) => [newTodo, ...prev]); // เพิ่มไว้บนสุด
+  };
+
+  // สลับสถานะเสร็จ/ยังไม่เสร็จ
+  const toggleTodo = (id: string): void => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  // ลบรายการ
+  const deleteTodo = (id: string): void => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
+
+  return { todos, loading, addTodo, toggleTodo, deleteTodo };
+}
+```
+
+## ขั้นตอนที่ 2 — สร้าง TodoItem Component
+
+สร้างไฟล์ `components/TodoItem.tsx` สำหรับแสดงรายการ Todo แต่ละรายการ
+
+```tsx
+// components/TodoItem.tsx
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Todo } from '../hooks/useTodos';
+
+interface TodoItemProps {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps): React.JSX.Element {
+  return (
+    <View style={styles.container}>
+      {/* กดเพื่อ Toggle สถานะ */}
+      <TouchableOpacity style={styles.checkArea} onPress={() => onToggle(todo.id)}>
+        <View style={[styles.checkbox, todo.completed && styles.checked]}>
+          {todo.completed && <Text style={styles.checkmark}>✓</Text>}
+        </View>
+        <Text style={[styles.text, todo.completed && styles.completedText]}>
+          {todo.text}
+        </Text>
+      </TouchableOpacity>
+
+      {/* ปุ่มลบ */}
+      <TouchableOpacity style={styles.deleteBtn} onPress={() => onDelete(todo.id)}>
+        <Text style={styles.deleteText}>ลบ</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderBottomWidth: 1,
+    borderColor: '#f0f0f0',
+  },
+  checkArea: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checked: { backgroundColor: '#007AFF' },
+  checkmark: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
+  text: { fontSize: 16, color: '#1a1a1a', flex: 1 },
+  completedText: {
+    textDecorationLine: 'line-through', // ขีดทับข้อความ
+    color: '#aaa',
+  },
+  deleteBtn: { paddingHorizontal: 12, paddingVertical: 6 },
+  deleteText: { color: '#FF3B30', fontSize: 14 },
+});
+```
+
+## ขั้นตอนที่ 3 — สร้างหน้าหลัก
+
+สร้างไฟล์ `app/index.tsx` ซึ่งเป็นหน้าหลักที่รวม Component และ Hook ทั้งหมดเข้าด้วยกัน
+
+```tsx
+// app/index.tsx
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import { useTodos } from '../hooks/useTodos';
+import TodoItem from '../components/TodoItem';
+
+export default function TodoScreen(): React.JSX.Element {
+  const { todos, loading, addTodo, toggleTodo, deleteTodo } = useTodos();
+  const [inputText, setInputText] = useState<string>('');
+
+  const handleAdd = (): void => {
+    addTodo(inputText);
+    setInputText(''); // ล้าง Input หลังจากเพิ่ม
+  };
+
+  const completedCount = todos.filter((t) => t.completed).length;
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  return (
+    // SafeAreaView ป้องกันเนื้อหาทับกับ Notch หรือ Home Bar
+    <SafeAreaView style={styles.safe}>
+      {/* KeyboardAvoidingView ป้องกัน Keyboard บัง Input */}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>รายการสิ่งที่ต้องทำ</Text>
+          <Text style={styles.subtitle}>
+            เสร็จแล้ว {completedCount} / {todos.length} รายการ
+          </Text>
+        </View>
+
+        {/* Input เพิ่มรายการ */}
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.input}
+            value={inputText}
+            onChangeText={setInputText}
+            placeholder="เพิ่มรายการใหม่..."
+            onSubmitEditing={handleAdd}   // กด Enter บน Keyboard
+            returnKeyType="done"
+          />
+          <TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
+            <Text style={styles.addBtnText}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* รายการ Todo */}
+        {todos.length === 0 ? (
+          <View style={styles.empty}>
+            <Text style={styles.emptyText}>ยังไม่มีรายการ</Text>
+            <Text style={styles.emptyHint}>กรอกข้อความแล้วกด + เพื่อเพิ่มรายการ</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={todos}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TodoItem
+                todo={item}
+                onToggle={toggleTodo}
+                onDelete={deleteTodo}
+              />
+            )}
+          />
+        )}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: '#fff' },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  container: { flex: 1 },
+  header: { padding: 20, borderBottomWidth: 1, borderColor: '#f0f0f0' },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#1a1a1a' },
+  subtitle: { fontSize: 14, color: '#888', marginTop: 4 },
+  inputRow: {
+    flexDirection: 'row',
+    padding: 12,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderColor: '#f0f0f0',
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 16,
+  },
+  addBtn: {
+    width: 48,
+    height: 48,
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addBtnText: { color: '#fff', fontSize: 28, lineHeight: 32 },
+  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 },
+  emptyText: { fontSize: 18, color: '#aaa' },
+  emptyHint: { fontSize: 13, color: '#ccc' },
+});
+```
+
+## แบบฝึกหัดเพิ่มเติม
+
+เมื่อสร้าง Todo App พื้นฐานได้แล้ว ให้ลองเพิ่มฟีเจอร์ต่อไปนี้เพื่อฝึกทักษะ
+
+1. **Filter** — เพิ่มแท็บ "ทั้งหมด / ยังไม่เสร็จ / เสร็จแล้ว" เพื่อกรองรายการ
+2. **Edit** — เพิ่มความสามารถในการแก้ไขข้อความของรายการที่มีอยู่แล้ว
+3. **Priority** — เพิ่มระดับความสำคัญ (สูง / กลาง / ต่ำ) และจัดเรียงตาม Priority
+4. **Due Date** — เพิ่มวันกำหนดส่ง และแสดง Alert เมื่อใกล้ถึงกำหนด
+5. **Category** — จัดกลุ่มรายการตามหมวดหมู่ เช่น งาน, ส่วนตัว, การเรียน

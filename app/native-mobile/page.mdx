@@ -1,0 +1,75 @@
+---
+title: "Native Mobile Application Programming with Flutter"
+sidebarTitle: "Native Mobile"
+asIndexPage: true
+---
+
+import { Cards } from "nextra/components";
+
+# Native Mobile Application Programming with Flutter
+
+รายวิชานี้ศึกษาการพัฒนาแอปพลิเคชันบนอุปกรณ์เคลื่อนที่ โดยใช้ **Flutter และภาษา Dart** เป็นเครื่องมือหลัก ผู้เรียนจะได้สร้าง UI ที่ปรับตามขนาดหน้าจอ จัดการ State เชื่อมต่อ REST API บันทึกข้อมูลในเครื่อง ขอ Permission ใช้ความสามารถของอุปกรณ์ ทดสอบ และเตรียมแอปสำหรับเผยแพร่
+
+Flutter เป็น cross-platform UI toolkit ที่ใช้ codebase ร่วมกันบน Android และ iOS แต่ยังสามารถเรียก Native API ผ่าน Plugin หรือ Platform Channel ได้ จึงเหมาะสำหรับใช้เรียนทั้งแนวคิด Mobile Application และการสร้างผลิตภัณฑ์ที่ใช้งานจริง
+
+## ผลลัพธ์การเรียนรู้
+
+เมื่อเรียนครบ ผู้เรียนจะสามารถ:
+
+- อธิบายข้อจำกัดของอุปกรณ์เคลื่อนที่และเลือกแนวทางออกแบบที่เหมาะสม
+- เขียน Dart ที่ใช้ Null Safety, Future, Stream และ Object-Oriented Programming ได้
+- สร้าง Flutter UI ที่ responsive, accessible และสอดคล้องกับ Material Design
+- ออกแบบ Navigation, State Management และโครงสร้างแอปแบบแยก UI/Data layer
+- เชื่อมต่อ API จัดการ JSON และบันทึกข้อมูลแบบ local/offline
+- ใช้ Permission, Camera, Location และบริการของแพลตฟอร์มอย่างปลอดภัย
+- เขียน Unit, Widget และ Integration Test และสร้าง Release Build ได้
+
+> **พื้นฐานที่ควรมี:** การเขียนโปรแกรมเบื้องต้น ตัวแปร เงื่อนไข Loop Function Class และความเข้าใจ HTTP/JSON ระดับพื้นฐาน
+
+## พื้นฐาน Flutter และ Dart
+
+<Cards>
+  <Cards.Card title="Mobile และ Flutter" href="/native-mobile/mobile-flutter-overview" />
+  <Cards.Card title="ติดตั้งและตั้งค่าเครื่องมือ" href="/native-mobile/install-setup" />
+  <Cards.Card title="Dart สำหรับ Flutter" href="/native-mobile/dart-for-flutter" />
+  <Cards.Card title="Asynchronous Dart" href="/native-mobile/dart-async" />
+  <Cards.Card title="โครงสร้างโปรเจกต์ Flutter" href="/native-mobile/flutter-project-structure" />
+</Cards>
+
+## User Interface
+
+<Cards>
+  <Cards.Card title="Widget และ Lifecycle" href="/native-mobile/widgets-lifecycle" />
+  <Cards.Card title="Layout และ Responsive UI" href="/native-mobile/layouts-responsive" />
+  <Cards.Card title="Form, Theme และ Accessibility" href="/native-mobile/forms-theme-accessibility" />
+  <Cards.Card title="Navigation และ Routing" href="/native-mobile/navigation-routing" />
+</Cards>
+
+## State, Architecture และ Data
+
+<Cards>
+  <Cards.Card title="State Management" href="/native-mobile/state-management" />
+  <Cards.Card title="Flutter App Architecture" href="/native-mobile/app-architecture" />
+  <Cards.Card title="Networking และ REST API" href="/native-mobile/networking-rest-api" />
+  <Cards.Card title="Local Storage และ Offline Data" href="/native-mobile/local-storage" />
+</Cards>
+
+## Mobile Features และ Production
+
+<Cards>
+  <Cards.Card title="Authentication และ Firebase" href="/native-mobile/authentication-firebase" />
+  <Cards.Card title="Permission และ Device APIs" href="/native-mobile/device-features" />
+  <Cards.Card title="Testing, Debugging และ Release" href="/native-mobile/testing-debugging-release" />
+</Cards>
+
+## โปรเจกต์ประจำวิชา
+
+สร้าง **แอปกิจกรรมมหาวิทยาลัย** แบบต่อเนื่อง: แสดงรายการและรายละเอียดกิจกรรม ค้นหาและบันทึกรายการโปรด เชื่อม REST API รองรับ Offline Login แยกสิทธิ์ผู้ใช้ ใช้ Camera หรือ Location และส่งมอบเป็น Android App Bundle พร้อมชุดทดสอบ
+
+แต่ละบทมี Milestone เพื่อให้โปรเจกต์เติบโตไปพร้อมกับเนื้อหา แนะนำให้เก็บงานด้วย Git และสร้าง branch แยกตาม feature
+
+## เอกสารอ้างอิง
+
+- [Flutter documentation](https://docs.flutter.dev/)
+- [Dart documentation](https://dart.dev/docs)
+- [Flutter packages](https://pub.dev/)

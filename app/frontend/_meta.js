@@ -1,0 +1,18 @@
+export default {
+  internet: "Internet",
+  html: "HTML",
+  css: "CSS",
+  "html-with-css": "HTML with CSS",
+  "responsive-css": "Responsive CSS",
+  "css-framework": "CSS Framework",
+  bootstrap: "Bootstrap",
+  javascript: "JavaScript",
+  dom: "DOM",
+  "javascript-events": "JavaScript Events",
+  "javascript-variables": "JavaScript Variables",
+  "javascript-functions": "JavaScript Functions",
+  api: "API",
+  react: "React.js",
+
+  "course-project": "โปรเจกต์ประจำวิชา",
+};
